@@ -29,12 +29,19 @@ This repository is structured to serve both as a reproducible codebase and as th
 ## 3. Mathematical Formulation (For IEEE Paper Methods Section)
 
 1. **Shrinkage-Regularized SPD Covariance:** Given a bandpass-filtered trial matrix $X \in \mathbb{R}^{C \times T}$ (mean-centered across time), sample covariance $\hat{\Sigma} = \frac{1}{T-1} X X^\top$ is regularized via shrinkage $\lambda = 0.03$:
-   $$\Sigma_{\text{reg}} = (1 - \lambda)\hat{\Sigma} + \lambda \frac{\operatorname{tr}(\hat{\Sigma})}{C} I_C$$
+
+   $$\Sigma_{\mathrm{reg}} = (1 - \lambda)\hat{\Sigma} + \lambda \frac{\mathrm{tr}(\hat{\Sigma})}{C} I_C$$
+
 2. **Unsupervised Session Alignment:** Each session's SPD matrices are centered so their Riemannian geometric mean sits at the Identity matrix $I_C$:
-   $$\tilde{\Sigma}_i = \bar{\Sigma}_{\text{sess}}^{-1/2}\, \Sigma_i\, \bar{\Sigma}_{\text{sess}}^{-1/2}$$
-3. **Affine-Invariant Riemannian Mean & Tangent-Space Projection:** Using eigendecomposition $A = V \operatorname{diag}(\lambda_k) V^\top$ with $A^p = V \operatorname{diag}(\lambda_k^p) V^\top$, the Riemannian (Fréchet) mean $P$ is estimated via geodesic updates on $\mathcal{S}_{++}^{C}$, and each matrix is mapped to the tangent space at $P$:
+
+   $$\tilde{\Sigma}_i = \bar{\Sigma}_{\mathrm{sess}}^{-1/2}\, \Sigma_i\, \bar{\Sigma}_{\mathrm{sess}}^{-1/2}$$
+
+3. **Affine-Invariant Riemannian Mean & Tangent-Space Projection:** Using eigendecomposition $A = V \mathrm{diag}(\lambda_k) V^\top$ with $A^p = V \mathrm{diag}(\lambda_k^p) V^\top$, the Riemannian (Fréchet) mean $P$ is estimated via geodesic updates on $\mathcal{S}_{++}^{C}$, and each matrix is mapped to the tangent space at $P$:
+
    $$S_i = P^{1/2} \log\!\left(P^{-1/2} \tilde{\Sigma}_i P^{-1/2}\right) P^{1/2}$$
+
    Half-vectorizing the upper triangle of $S_i$ (scaling strict off-diagonals by $\sqrt{2}$) yields a **$253$-dimensional** feature vector per sub-band ($\frac{22 \times 23}{2} = 253$).
+
 4. **4-Band Multi-Manifold Fusion & SVM:** Each trial is filtered into **Theta-Mu (4–12 Hz)**, **Mu-Low Beta (8–16 Hz)**, **Mid Beta (12–24 Hz)**, and **High Beta (16–32 Hz)**. Concatenating tangent vectors across all 4 bands produces a **$1,012$-dimensional** fused representation classified by a Linear SVM ($C = 0.05$) with `StandardScaler`.
 
 ---
