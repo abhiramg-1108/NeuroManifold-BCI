@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.vscode/
+sample_trial0_eeg.csv
+subject1_all_576_trials_manifest.csv
+subject1_trial0_full_4sec.csv
